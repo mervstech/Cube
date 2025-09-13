@@ -7,6 +7,7 @@
   <style>
     body {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100vh;
@@ -14,30 +15,39 @@
     }
     canvas {
       border: 1px solid #000;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
+  <div>
+    <label>Length (X): <input type="number" id="length" value="150"></label>
+    <label>Width (Z): <input type="number" id="width" value="100"></label>
+    <label>Height (Y): <input type="number" id="height" value="120"></label>
+    <button onclick="updateCube()">Draw Cube</button>
+  </div>
+
   <canvas id="cubeCanvas" width="500" height="500"></canvas>
 
   <script>
     const canvas = document.getElementById("cubeCanvas");
     const ctx = canvas.getContext("2d");
 
-    // Function to draw cube
-    function drawCube(x, y, size) {
-      const h = size / 2;
+    // Function to draw cuboid
+    function drawCube(x, y, length, width, height) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Points of cube in isometric projection
+      // Front face
       const frontTop = [x, y];
-      const frontRight = [x + size, y];
-      const frontBottom = [x + size, y + size];
-      const frontLeft = [x, y + size];
+      const frontRight = [x + length, y];
+      const frontBottom = [x + length, y + height];
+      const frontLeft = [x, y + height];
 
-      const backTop = [x + h, y - h];
-      const backRight = [x + size + h, y - h];
-      const backBottom = [x + size + h, y + size - h];
-      const backLeft = [x + h, y + size - h];
+      // Back face (shifted by width in isometric projection)
+      const backTop = [x + width, y - width];
+      const backRight = [x + length + width, y - width];
+      const backBottom = [x + length + width, y + height - width];
+      const backLeft = [x + width, y + height - width];
 
       ctx.beginPath();
       // Front face
@@ -48,8 +58,8 @@
       ctx.closePath();
       ctx.stroke();
 
-      // Back face
       ctx.beginPath();
+      // Back face
       ctx.moveTo(...backTop);
       ctx.lineTo(...backRight);
       ctx.lineTo(...backBottom);
@@ -57,24 +67,25 @@
       ctx.closePath();
       ctx.stroke();
 
-      // Connect edges
       ctx.beginPath();
-      ctx.moveTo(...frontTop);
-      ctx.lineTo(...backTop);
-
-      ctx.moveTo(...frontRight);
-      ctx.lineTo(...backRight);
-
-      ctx.moveTo(...frontBottom);
-      ctx.lineTo(...backBottom);
-
-      ctx.moveTo(...frontLeft);
-      ctx.lineTo(...backLeft);
+      // Connect edges
+      ctx.moveTo(...frontTop); ctx.lineTo(...backTop);
+      ctx.moveTo(...frontRight); ctx.lineTo(...backRight);
+      ctx.moveTo(...frontBottom); ctx.lineTo(...backBottom);
+      ctx.moveTo(...frontLeft); ctx.lineTo(...backLeft);
       ctx.stroke();
     }
 
-    // Draw cube
-    drawCube(150, 200, 150);
+    // Button function
+    function updateCube() {
+      const length = parseInt(document.getElementById("length").value);
+      const width = parseInt(document.getElementById("width").value);
+      const height = parseInt(document.getElementById("height").value);
+      drawCube(150, 200, length, width, height);
+    }
+
+    // Initial draw
+    updateCube();
   </script>
 </body>
 </html>
