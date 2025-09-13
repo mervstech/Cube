@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canvas Cube</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f4f4f4;
+    }
+    canvas {
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="cubeCanvas" width="500" height="500"></canvas>
+
+  <script>
+    const canvas = document.getElementById("cubeCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // Function to draw cube
+    function drawCube(x, y, size) {
+      const h = size / 2;
+
+      // Points of cube in isometric projection
+      const frontTop = [x, y];
+      const frontRight = [x + size, y];
+      const frontBottom = [x + size, y + size];
+      const frontLeft = [x, y + size];
+
+      const backTop = [x + h, y - h];
+      const backRight = [x + size + h, y - h];
+      const backBottom = [x + size + h, y + size - h];
+      const backLeft = [x + h, y + size - h];
+
+      ctx.beginPath();
+      // Front face
+      ctx.moveTo(...frontTop);
+      ctx.lineTo(...frontRight);
+      ctx.lineTo(...frontBottom);
+      ctx.lineTo(...frontLeft);
+      ctx.closePath();
+      ctx.stroke();
+
+      // Back face
+      ctx.beginPath();
+      ctx.moveTo(...backTop);
+      ctx.lineTo(...backRight);
+      ctx.lineTo(...backBottom);
+      ctx.lineTo(...backLeft);
+      ctx.closePath();
+      ctx.stroke();
+
+      // Connect edges
+      ctx.beginPath();
+      ctx.moveTo(...frontTop);
+      ctx.lineTo(...backTop);
+
+      ctx.moveTo(...frontRight);
+      ctx.lineTo(...backRight);
+
+      ctx.moveTo(...frontBottom);
+      ctx.lineTo(...backBottom);
+
+      ctx.moveTo(...frontLeft);
+      ctx.lineTo(...backLeft);
+      ctx.stroke();
+    }
+
+    // Draw cube
+    drawCube(150, 200, 150);
+  </script>
+</body>
+</html>
